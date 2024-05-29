@@ -66,7 +66,7 @@ class Profile:
             while tempEXP >= CONST_EXP_FACTOR:
                 tempEXP /= CONST_EXP_FACTOR
                 Level += 1
-            Percentage = 100.00 * (tempEXP - 1.0) / 1.5
+            Percentage = 100.00 * (tempEXP - 1.0) / CONST_EXP_FACTOR
         return [f"Level: {Level}, EXP: {self.EXP:,} ({Percentage:.2f}%)", Level, Percentage]
 
 # 创建一个Tkinter窗口
