@@ -1645,8 +1645,6 @@ def RandomFeatureSymbol(Source="", UnlockedRows=4, HaveResetPlus1=False, CanBeAd
     if not HaveResetPlus1 and Source != "Arms Dealer" and Source != "Necromancer":
         Symbols.append("Reset +1")
         Weights.append(8)
-        Symbols.append("Dynamite")
-        Weights.append(78)
 
     return random.choices(Symbols, weights=Weights, k=1)[0]
 
