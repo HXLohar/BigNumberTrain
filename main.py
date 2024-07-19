@@ -21,14 +21,15 @@ CONST_TASK_TIME = 900
 CONST_EMERGENCY_TASK_TIME = 600
 CONST_SPIN_SPEED = 1875
 CONST_BONUS_TITLE = ["Regular Bonus", "Premium Bonus", "Persistent Bonus",
-                     "Persistent Bonus: Shapeshifter", "Persistent Bonus: Arms Dealer, +5 Symbols", "2 Persistent Bonus",
+                     "Persistent Bonus: Shapeshifter", "Persistent Bonus: Arms Dealer, +5 Symbols",
+                     "2 Persistent Bonus",
                      "2 Persistent Bonus, +1 Extra Chance", "3 Persistent Bonus",
                      "3 Persistent Bonus: Shapeshifter, Arms Dealer, Necromancer, +2 Symbols",
                      "4 Persistent Bonus", "Premium 4 Persistent Bonus, +2 Symbols",
                      "5 Persistent Bonus",
                      "5 Persistent Bonus, +2 Symbols, +1 Extra Chance",
                      "Premium 5 Persistent Bonus, +3 Symbols, +2 Extra Chance",
-                     "Premium 5 Persistent Bonus: 5x Shapeshifter, +3 Symbols, +2 Extra Chance",]
+                     "Premium 5 Persistent Bonus: 5x Shapeshifter, +3 Symbols, +2 Extra Chance", ]
 
 
 class Profile:
@@ -69,6 +70,7 @@ class Profile:
             Percentage = 100.00 * (tempEXP - 1.0) / CONST_EXP_FACTOR
         return [f"Level: {Level}, EXP: {self.EXP:,} ({Percentage:.2f}%)", Level, Percentage]
 
+
 # 创建一个Tkinter窗口
 root = tk.Tk()
 # 隐藏主窗口
@@ -99,7 +101,6 @@ else:
                 PlayerProfile = Profile()
         except Exception as e:
             print(f"Error during unpickling object (Possibly incompatible): {e}")
-
 
     # 处理用户输入
 
@@ -201,7 +202,8 @@ def DisplayHighscore(root, TargetProfile=PlayerProfile):
     TL.title("BIG NUMBER TRAIN.EXE - Highscore")
 
     label1 = tk.Label(TL, font=('Arial', 13, 'bold'),
-                      text=f"Highscore\n{max(TargetProfile.Highscore):,}x\nHighest rank:\n{FormatStars(TargetProfile.Star_record)}\n", anchor='w', justify='left')
+                      text=f"Highscore\n{max(TargetProfile.Highscore):,}x\nHighest rank:\n{FormatStars(TargetProfile.Star_record)}\n",
+                      anchor='w', justify='left')
     label1.place(x=20, y=10)
     # RANK
     # Mars(0)
@@ -212,8 +214,6 @@ def DisplayHighscore(root, TargetProfile=PlayerProfile):
     # Europe(5)
     # UK(6)
     # more tbd
-
-
 
     st1 = scrolledtext.ScrolledText(TL, font=('Arial', 11), width=500, height=260)
     st1.place(x=0, y=180)
@@ -307,7 +307,6 @@ class Round:
                                  command=lambda root=self.root: DisplayHighscore(root))
         self.Button2.place(x=490, y=10, width=150, height=50)
 
-
         # 然后初始化
         self.UpdateUI()
         self.root.mainloop()
@@ -320,7 +319,7 @@ class Round:
             if self.SpinsLeft > 0:
                 self.label1.config(text=f"SPINS LEFT: " + "★" * self.ExtraChance + "●" * self.SpinsLeft)
             elif self.SpinsLeft <= 0 < self.ExtraChance:
-                self.label1.config(text=f"SPINS LEFT: " + "★" * (self.ExtraChance-1) + "☆" + "●" * self.SpinsLeft)
+                self.label1.config(text=f"SPINS LEFT: " + "★" * (self.ExtraChance - 1) + "☆" + "●" * self.SpinsLeft)
             else:
                 self.label1.config(text=f"SPINS LEFT: " + "●" * self.SpinsLeft)
 
@@ -484,8 +483,10 @@ class Round:
                 self.Blocks[i].Locked = True
             else:
                 self.Blocks[i].Locked = False
+
     def do_nothing(self):
-        print("a")
+        pass
+
     def ResetRound(self, BonusOption=0):
         self.HF_Bonus = False
 
@@ -499,8 +500,6 @@ class Round:
 
         self.ResetSymbols()
         self.TaskList.Reset()
-
-
 
         # Premium模式: 以8行开始, 和Reset +1
         Flag_Premium = False
@@ -863,7 +862,6 @@ class Round:
         else:
             self.LogMessage.append(f"MISS\nNothing landed in active area. SPINS LEFT: {self.SpinsLeft}")
 
-
         if flag_hit:
             self.UpdateUI()
         elif self.CountPersistent() > 0:
@@ -1007,7 +1005,7 @@ class Round:
         # 获取并执行相应的函数
         func = functions.get(Symbol.Symbol)
         if FLAG_DEBUG_MESSAGEBOX:
-            messagebox.showinfo("Feature Symbol", f"Activating {Symbol.Symbol} @ {Symbol.X}, {Symbol.Y}:")
+            messagebox.showinfo("Feature Symbol", f"Activating {Symbol.Symbol} @ {self.get_coordinates(Symbol)}:")
         if func:
             func(Symbol)
         if Symbol.Symbol == "Adj.Collector":
@@ -1048,7 +1046,7 @@ class Round:
                     Count += 1
         return Count
 
-    def CountPersistent(self, flag_equal = False):
+    def CountPersistent(self, flag_equal=False):
         Count = 0.0
         for obj in self.Blocks:
             if not obj.Locked and obj.Type == 3:
@@ -1098,35 +1096,35 @@ class Round:
             20000, 30000, 50000, 75000, 100000,
             150000, 200000, 300000, 500000, 1 * M,
 
-            2 * M, 3 * M, 5 * M, 10 * M, 20 * M,
-            50 * M, 100 * M, 300 * M, 1 * B, 3 * B,
+                                            2 * M, 3 * M, 5 * M, 10 * M, 20 * M,
+                                            50 * M, 100 * M, 300 * M, 1 * B, 3 * B,
 
-            10 * B, 30 * B, 100 * B, 300 * B, 1 * T,
-            3 * T, 10 * T, 30 * T, 100 * T, 300 * T,
+                                            10 * B, 30 * B, 100 * B, 300 * B, 1 * T,
+                                            3 * T, 10 * T, 30 * T, 100 * T, 300 * T,
 
-            1 * Q1, 5 * Q1, 25 * Q1, 100 * Q1, 500 * Q1,
-            2 * Q2, 10 * Q2, 50 * Q2, 200 * Q2, 1 * S1,
+                                            1 * Q1, 5 * Q1, 25 * Q1, 100 * Q1, 500 * Q1,
+                                            2 * Q2, 10 * Q2, 50 * Q2, 200 * Q2, 1 * S1,
 
-            6 * S1, 40 * S1, 250 * S1, 1.5 * S2, 10 * S2,
-            60 * S2, 400 * S2, 2.5 * OCT, 15 * OCT, 100 * OCT,
+                                            6 * S1, 40 * S1, 250 * S1, 1.5 * S2, 10 * S2,
+                                            60 * S2, 400 * S2, 2.5 * OCT, 15 * OCT, 100 * OCT,
 
-            750 * OCT, 5 * NON, 35 * NON, 250 * NON, 1.8 * DEC,
-            15 * DEC, 100 * DEC, 750 * DEC, 5 * uDEC, 40 * uDEC,
+                                            750 * OCT, 5 * NON, 35 * NON, 250 * NON, 1.8 * DEC,
+                                            15 * DEC, 100 * DEC, 750 * DEC, 5 * uDEC, 40 * uDEC,
 
-            42 * uDEC, 4.4 * dDEC, 46 * dDEC, 480 * dDEC, 5 * tDEC,
-            60 * tDEC, 700 * tDEC, 8000 * tDEC, 90000 * tDEC, 1 * M * tDEC
+                                            42 * uDEC, 4.4 * dDEC, 46 * dDEC, 480 * dDEC, 5 * tDEC,
+                                            60 * tDEC, 700 * tDEC, 8000 * tDEC, 90000 * tDEC, 1 * M * tDEC
 
         ]
         for i in range(0, 10):
-            last = thresholds[len(thresholds)-1]
+            last = thresholds[len(thresholds) - 1]
             thresholds.append(last * 12)
         for i in range(0, 4):
-            last = thresholds[len(thresholds)-1]
+            last = thresholds[len(thresholds) - 1]
             thresholds.append(last * 24)
 
-        last = thresholds[len(thresholds)-1]
+        last = thresholds[len(thresholds) - 1]
         thresholds.append(last * 48)
-        last = thresholds[len(thresholds)-1]
+        last = thresholds[len(thresholds) - 1]
         thresholds.append(last * 96)
 
         level = 0
@@ -1185,7 +1183,15 @@ class Round:
         self.UpdateUI()
 
     def AddMsg_FeatureSymbolActivated(self, Symbol):
-        self.LogAndDisplayMsg(f"------ {Symbol.Symbol} @ ({Symbol.X}, {Symbol.Y})'s turn! ------")
+
+        self.LogAndDisplayMsg(f"------ {Symbol.Symbol} @ {self.get_coordinates(Symbol)}'s turn! ------")
+
+    def get_coordinates(self, Symbol):
+        # update Jul 16th 2024
+        # it seems all coordinates has been messed up
+        # so have to print it in format of (Y, X) so it looks correct
+        # as I don't want to rewrite a lot of the code
+        return f"({Symbol.Y}, {Symbol.X})"
 
     def DoSupplier(self, SourceBlock):
         self.AddMsg_FeatureSymbolActivated(SourceBlock)
@@ -1223,7 +1229,7 @@ class Round:
         if len(Adj) <= 0:
             SourceBlock.Value += SourceBlock.Speed
             return
-        self.LogMessage.append(f"------ Dynamite @ ({SourceBlock.X}, {SourceBlock.Y}) Explodes! ------")
+        self.LogMessage.append(f"------ Dynamite @ {self.get_coordinates(SourceBlock)} Explodes! ------")
         SourceBlock.Activated = True
         Adj = FindSymbols(self, "Adjacent", False, SourceBlock.X, SourceBlock.Y)
         for obj in Adj:
@@ -1246,9 +1252,9 @@ class Round:
         if Target.Type == 1:
             Target.Type = 2
             Target.Activated = True
-            self.LogMessage.append(f"Symbol @ ({Target.X}, {Target.Y}) is now a {Target.Symbol}.")
+            self.LogMessage.append(f"Symbol @ {self.get_coordinates(Target)} is now a {Target.Symbol}.")
         else:
-            self.LogMessage.append(f"Symbol @ ({Target.X}, {Target.Y}) is now a {Target.Symbol}.")
+            self.LogMessage.append(f"Symbol @ {self.get_coordinates(Target)} is now a {Target.Symbol}.")
         if Target.Type == 2:
             self.LogMessage.append(f"This isn't a Persistent symbol, and it'll be activated.")
             self.TaskList.AddEmergencyTask(lambda obj=Target, extra_param="advisor": self.Activate(obj, extra_param))
@@ -1283,7 +1289,7 @@ class Round:
     # 使目标符号进行收集支付者操作
     def DoCollectorPayer(self, SourceBlock):
         if not self.FLAG1:
-            self.LogAndDisplayMsg(f"------ Collector Payer @ ({SourceBlock.X}, {SourceBlock.Y})'s turn! ------")
+            self.LogAndDisplayMsg(f"------ Collector Payer @ {self.get_coordinates(SourceBlock)}'s turn! ------")
         TargetCount = [3, 4, 5]
         Weight = [72, 22, 6]
         if SourceBlock.Symbol == "Collector Payer" and SourceBlock.Type == 3:
@@ -1316,7 +1322,7 @@ class Round:
     # 使目标符号进行狙击者操作
     def DoSniper(self, SourceBlock):
         if not self.FLAG1:
-            self.LogAndDisplayMsg(f"------ Sniper @ ({SourceBlock.X}, {SourceBlock.Y})'s turn! ------")
+            self.LogAndDisplayMsg(f"------ Sniper @ {self.get_coordinates(SourceBlock)}'s turn! ------")
         TargetCount = [3, 4, 5, 6, 7, 8]
         Weight = [160, 30, 12, 8, 4, 1]
         if SourceBlock.Type == 3:
@@ -1330,12 +1336,12 @@ class Round:
             Profit += EligibleBlocks[0].Value
             EligibleBlocks[0].IsAffected = True
             EligibleBlocks[0].Value *= 2
-            self.LogMessage.append(f"The symbol @ ({EligibleBlocks[0].X}, {EligibleBlocks[0].Y}) is doubled:"
+            self.LogMessage.append(f"The symbol @ {self.get_coordinates(EligibleBlocks[0])} is doubled:"
                                    f"{int(EligibleBlocks[0].Value / 2):,} -> {EligibleBlocks[0].Value:,}")
         self.LogMessage.append(f"Total profit: {Profit:,}x.")
 
     def DoCollector(self, SourceBlock, isAdj=False):
-        Msg = f"Collector @ ({SourceBlock.X}, {SourceBlock.Y})'s turn! ------"
+        Msg = f"Collector @ {self.get_coordinates(SourceBlock)}'s turn! ------"
         if isAdj:
             Msg = "Adj." + Msg
         Msg = "------ " + Msg
@@ -1357,7 +1363,7 @@ class Round:
         self.LogMessage.append("A total of {:,} collected.".format(ValueCollected))
 
     def DoPayer(self, SourceBlock, isAdj=False):
-        Msg = f"Payer @ ({SourceBlock.X}, {SourceBlock.Y})'s turn! ------"
+        Msg = f"Payer @ {self.get_coordinates(SourceBlock)}'s turn! ------"
         if isAdj:
             Msg = "Adj." + Msg
         Msg = "------ " + Msg
@@ -1383,7 +1389,7 @@ class Round:
 
     def DoUnlocker(self, SourceBlock):
         if not self.FLAG1:
-            Msg = f"------ Unlocker @ ({SourceBlock.X}, {SourceBlock.Y})'s turn! ------"
+            Msg = f"------ Unlocker @ {self.get_coordinates(SourceBlock)}'s turn! ------"
             self.LogAndDisplayMsg(Msg)
         self.UnlockRow()
 
@@ -1410,7 +1416,7 @@ class Round:
     def DoUpgrader(self, SourceBlock):
 
         if not self.FLAG1:
-            self.LogAndDisplayMsg(f"------ Upgrader @ ({SourceBlock.X}, {SourceBlock.Y})'s turn! ------")
+            self.LogAndDisplayMsg(f"------ Upgrader @ {self.get_coordinates(SourceBlock)}'s turn! ------")
 
         TargetCount = [1, 2, 3]
         Weight = [108, 16, 3]
@@ -1429,7 +1435,7 @@ class Round:
         random.shuffle(Silver_Symbols)
         Selected_Symbol = Silver_Symbols.pop()
         Selected_Symbol.Type = 3
-        self.LogMessage.append(f"{Selected_Symbol.Symbol} @ ({Selected_Symbol.X}, {Selected_Symbol.Y})is now"
+        self.LogMessage.append(f"{Selected_Symbol.Symbol} @ {self.get_coordinates(Selected_Symbol)} is now"
                                f" Persistent!")
         self.Activate(Selected_Symbol)
         self.ReduceHitFrequency()
@@ -1437,7 +1443,7 @@ class Round:
     def DoArmsDealer(self, SourceBlock):
 
         if not self.FLAG1:
-            self.LogAndDisplayMsg(f"------ Arms Dealer @ ({SourceBlock.X}, {SourceBlock.Y})'s turn! ------")
+            self.LogAndDisplayMsg(f"------ Arms Dealer @ {self.get_coordinates(SourceBlock)}'s turn! ------")
 
         TargetCount = [1, 2, 3, 4]
         Weight = [30, 55, 40, 12]
@@ -1471,14 +1477,14 @@ class Round:
 
         Selected_Symbol.Symbol = RandomFeatureSymbol("Arms Dealer", self.UnlockedRows, self.ResetPlus1,
                                                      CanBeAdj=CanBeAdj)
-        self.LogMessage.append(f"(Arms Dealer)Symbol @ ({Selected_Symbol.X}, {Selected_Symbol.Y}) becomes a "
+        self.LogMessage.append(f"(Arms Dealer)Symbol @ {self.get_coordinates(Selected_Symbol)} becomes a "
                                f"{Selected_Symbol.Symbol}!")
         # 添加到加急任务
         self.Activate(Selected_Symbol)
 
     def DoNecromancer(self, SourceBlock):
         if not self.FLAG1:
-            self.LogAndDisplayMsg(f"------ Necromancer @ ({SourceBlock.X}, {SourceBlock.Y})'s turn! ------")
+            self.LogAndDisplayMsg(f"------ Necromancer @ {self.get_coordinates(SourceBlock)}'s turn! ------")
         TargetCount = [2, 3, 4, 5, 6, 7]
         Weight = [65, 21, 14, 8, 5, 4]
 
@@ -1499,12 +1505,12 @@ class Round:
         Feature_Symbols = FindSymbols(self, "Feature", False, SourceBlock.X, SourceBlock.Y, "Necromancer")
         random.shuffle(Feature_Symbols)
         Target = Feature_Symbols[0]
-        self.LogMessage.append(f"(Necromancer)Activating {Target.Symbol} @ ({Target.X}, {Target.Y})!")
+        self.LogMessage.append(f"(Necromancer)Activating {Target.Symbol} @ {self.get_coordinates(Target)}!")
         self.Activate(Target)
 
     def DoShapeshifter(self, SourceBlock):
 
-        self.LogAndDisplayMsg(f"------ Shapeshifter @ ({SourceBlock.X}, {SourceBlock.Y})'s turn! ------")
+        self.LogAndDisplayMsg(f"------ Shapeshifter @ {self.get_coordinates(SourceBlock)}'s turn! ------")
 
         # 定义函数和相应的字符串
         actions = [
@@ -1540,7 +1546,7 @@ class Round:
         # 设置Action字符串
         # Msg = f"Collector @ ({SourceBlock.X}, {SourceBlock.Y})'s turn!"
         self.LogMessage.append(
-            f"Shapeshifter @ ({SourceBlock.X}, {SourceBlock.Y}) act as a {action_str} this turn.")
+            f"Shapeshifter @ {self.get_coordinates(SourceBlock)} act as a {action_str} this turn.")
 
         # 调用选定的函数
         self.FLAG1 = True
@@ -1550,7 +1556,7 @@ class Round:
 
     def DoResetPlus1(self, SourceBlock):
         if not self.FLAG1:
-            self.LogAndDisplayMsg(f"------ Reset +1 @ ({SourceBlock.X}, {SourceBlock.Y})'s turn! ------")
+            self.LogAndDisplayMsg(f"------ Reset +1 @ {self.get_coordinates(SourceBlock)}'s turn! ------")
 
         self.ResetPlus1 = True
         self.SpinsLeft = 4
@@ -1619,7 +1625,8 @@ class classSymbol:
 
 
 def RandomFeatureSymbol(Source="", UnlockedRows=4, HaveResetPlus1=False, CanBeAdj=True):
-    Symbols = ["Collector", "Payer", "Sniper", "Collector Payer", "Upgrader", "Synchronizer", "Jobs Advisor", "Supplier"]
+    Symbols = ["Collector", "Payer", "Sniper", "Collector Payer", "Upgrader", "Synchronizer", "Jobs Advisor",
+               "Supplier"]
     # NUMBERS
     Weights = [140, 140, 125, 16, 2, 9, 24, 20]
     if CanBeAdj and Source != "Locked":
@@ -1739,7 +1746,7 @@ def FindSymbols(BonusRound, Requirement, SearchForEmpty=False, X=-1, Y=-1, Extra
         if Extra_param == "Jobs Advisor":
             for obj in BonusRound.Blocks:
                 if not obj.Locked and obj.Symbol in ["Collector", "Payer", "Adj.Collector", "Adj.Payer"] and \
-                        ((obj.Type == 3) or (obj.Type == 2)) and (obj.Activated or obj.Type == 3)\
+                        ((obj.Type == 3) or (obj.Type == 2)) and (obj.Activated or obj.Type == 3) \
                         and not obj.IsSamePosition(X, Y):
                     Eligible_Blocks.append(obj)
             if len(Eligible_Blocks) == 0:
